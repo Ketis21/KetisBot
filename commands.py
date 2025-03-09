@@ -12,6 +12,7 @@ from payload import prepare_payload
 # Admin Slash Commands
 # -----------------------------
 
+# Whitelist the current channel (admin only)
 @app_commands.command(name="whitelist", description="Whitelist the current channel.")
 async def whitelist(interaction: discord.Interaction):
     if interaction.user.name.lower() != interaction.client.admin_name.lower():
@@ -24,6 +25,7 @@ async def whitelist(interaction: discord.Interaction):
     else:
         await interaction.response.send_message("Channel already whitelisted.")
 
+# Remove the current channel from the whitelist (admin only)
 @app_commands.command(name="blacklist", description="Remove the current channel from the whitelist.")
 async def blacklist(interaction: discord.Interaction):
     if interaction.user.name.lower() != interaction.client.admin_name.lower():
@@ -36,6 +38,7 @@ async def blacklist(interaction: discord.Interaction):
     else:
         await interaction.response.send_message("Channel is not whitelisted.")
 
+# Set the maximum response length (admin only, max 200)
 @app_commands.command(name="maxlen", description="Set the maximum response length.")
 @app_commands.describe(max_length="New maximum response length (integer)")
 async def maxlen(interaction: discord.Interaction, max_length: int):
@@ -48,7 +51,7 @@ async def maxlen(interaction: discord.Interaction, max_length: int):
     interaction.client.config["maxlen"] = max_length
     await interaction.response.send_message(f"Maximum response length changed to {max_length}.")
 
-
+# Set the idle timeout for the bot (admin only)
 @app_commands.command(name="idletime", description="Set the idle timeout for the bot.")
 @app_commands.describe(idle_time="New idle timeout in seconds (integer)")
 async def idletime(interaction: discord.Interaction, idle_time: int):
@@ -63,6 +66,7 @@ async def idletime(interaction: discord.Interaction, idle_time: int):
     else:
         await interaction.response.send_message("Channel is not whitelisted.")
 
+# Save the current bot configuration (admin only)
 @app_commands.command(name="savesettings", description="Save the bot configuration.")
 async def savesettings(interaction: discord.Interaction):
     if interaction.user.name.lower() != interaction.client.admin_name.lower():
@@ -71,6 +75,7 @@ async def savesettings(interaction: discord.Interaction):
     export_config()
     await interaction.response.send_message("Bot configuration saved.")
 
+# Set the bot's memory override (admin only)
 @app_commands.command(name="memory", description="Set the bot memory override.")
 @app_commands.describe(memory="Memory override text")
 async def memory(interaction: discord.Interaction, memory: str):
@@ -85,6 +90,7 @@ async def memory(interaction: discord.Interaction, memory: str):
     else:
         await interaction.response.send_message("Channel is not whitelisted.")
 
+# Set the bot's backend override (admin only)
 @app_commands.command(name="backend", description="Set the bot backend override.")
 @app_commands.describe(backend="Backend override text")
 async def backend(interaction: discord.Interaction, backend: str):
@@ -103,6 +109,7 @@ async def backend(interaction: discord.Interaction, backend: str):
 # User Slash Commands
 # -----------------------------
 
+# Put the bot to sleep in the current channel
 @app_commands.command(name="sleep", description="Put the bot to sleep in this channel.")
 async def sleep(interaction: discord.Interaction):
     channelid = interaction.channel.id
@@ -113,6 +120,7 @@ async def sleep(interaction: discord.Interaction):
     else:
         await interaction.response.send_message("Channel is not whitelisted.", ephemeral=True)
 
+# Get the current bot status in the channel
 @app_commands.command(name="status", description="Get the bot status in this channel.")
 async def status(interaction: discord.Interaction):
     channelid = interaction.channel.id
@@ -126,6 +134,7 @@ async def status(interaction: discord.Interaction):
     else:
         await interaction.response.send_message("Channel is not whitelisted.", ephemeral=True)
 
+# Reset the conversation history in the current channel
 @app_commands.command(name="reset", description="Reset the conversation history in this channel.")
 async def reset(interaction: discord.Interaction):
     channelid = interaction.channel.id
@@ -137,6 +146,7 @@ async def reset(interaction: discord.Interaction):
     else:
         await interaction.response.send_message("Channel is not whitelisted.", ephemeral=True)
 
+# Describe an uploaded image using the bot's AI
 @app_commands.command(name="describe", description="Describe an uploaded image.")
 @app_commands.describe(image="Image attachment to describe")
 async def describe(interaction: discord.Interaction, image: discord.Attachment = None):
@@ -170,6 +180,7 @@ async def describe(interaction: discord.Interaction, image: discord.Attachment =
     except Exception as e:
         await interaction.followup.send(f"An error occurred: {e}")
 
+# Generate an image from a given prompt using the bot's AI
 @app_commands.command(name="draw", description="Generate an image from a prompt.")
 @app_commands.describe(prompt="Prompt for image generation")
 async def draw(interaction: discord.Interaction, prompt: str):
@@ -200,6 +211,7 @@ async def draw(interaction: discord.Interaction, prompt: str):
     except Exception as e:
         await interaction.followup.send(f"An error occurred: {e}")
 
+# Continue an unfinished answer from the bot
 @app_commands.command(name="continue", description="Continue the unfinished answer.")
 async def continue_response(interaction: discord.Interaction):
     channelid = interaction.channel.id
@@ -207,16 +219,12 @@ async def continue_response(interaction: discord.Interaction):
     if not currchannel:
         await interaction.response.send_message("Channel is not whitelisted.", ephemeral=True)
         return
-
-    # Check if the last message in the chat history is from the bot.
     if not currchannel.chat_history or not currchannel.chat_history[-1].startswith(interaction.client.user.display_name):
         await interaction.response.send_message("No unfinished answer to continue.", ephemeral=True)
         return
-
     if interaction.client.busy.locked():
         await interaction.response.send_message("The bot is busy. Please try again later.", ephemeral=True)
         return
-
     try:
         await interaction.response.defer()
         currchannel.bot_reply_timestamp = time.time()
@@ -235,18 +243,13 @@ async def continue_response(interaction: discord.Interaction):
     except Exception as e:
         await interaction.followup.send(f"An error occurred: {e}")
 
-# -----------------------------
-# New Web Browsing Slash Command
-# -----------------------------
-import json  # Import json for debugging
-
+# Search the internet using KoboldCpp's websearch
 @app_commands.command(name="browse", description="Search the internet using KoboldCpp's websearch.")
 @app_commands.describe(query="The search query")
 async def browse(interaction: discord.Interaction, query: str):
     try:
         await interaction.response.defer()
-        # Use the expected payload format with key "q"
-        payload = {"q": query}
+        payload = {"q": query}  # Use key 'q' as required by the API
         response = requests.post(interaction.client.websearch_endpoint, json=payload)
         if response.status_code == 200:
             data = response.json()
@@ -254,7 +257,6 @@ async def browse(interaction: discord.Interaction, query: str):
                 if not data:
                     await interaction.followup.send(f"No results found for '{query}'.")
                     return
-                # Format the results nicely
                 formatted_results = "\n\n".join(
                     f"**{item.get('title', 'No Title')}**\n{item.get('desc', 'No Description')}\n<{item.get('url', '')}>"
                     for item in data
@@ -267,23 +269,22 @@ async def browse(interaction: discord.Interaction, query: str):
     except Exception as e:
         await interaction.followup.send(f"An error occurred: {e}", ephemeral=True)
 
-
 # -----------------------------
 # Register Commands
 # -----------------------------
 def setup(app: discord.Client):
-    tree = app.tree
-    tree.add_command(whitelist)
-    tree.add_command(blacklist)
-    tree.add_command(maxlen)
-    tree.add_command(idletime)
-    tree.add_command(savesettings)
-    tree.add_command(memory)
-    tree.add_command(backend)
-    tree.add_command(sleep)
-    tree.add_command(status)
-    tree.add_command(reset)
-    tree.add_command(describe)
-    tree.add_command(draw)
-    tree.add_command(continue_response)
-    tree.add_command(browse)
+    tree = app.tree  # Get the command tree from the client
+    tree.add_command(whitelist)   # Register whitelist command
+    tree.add_command(blacklist)   # Register blacklist command
+    tree.add_command(maxlen)      # Register maxlen command
+    tree.add_command(idletime)    # Register idletime command
+    tree.add_command(savesettings)# Register savesettings command
+    tree.add_command(memory)      # Register memory command
+    tree.add_command(backend)     # Register backend command
+    tree.add_command(sleep)       # Register sleep command
+    tree.add_command(status)      # Register status command
+    tree.add_command(reset)       # Register reset command
+    tree.add_command(describe)    # Register describe command
+    tree.add_command(draw)        # Register draw command
+    tree.add_command(continue_response)  # Register continue command
+    tree.add_command(browse)      # Register browse command

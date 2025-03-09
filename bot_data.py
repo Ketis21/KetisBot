@@ -4,17 +4,20 @@ import json
 
 class BotChannelData:
     def __init__(self):
-        self.chat_history = []
-        self.bot_reply_timestamp = time.time() - 9999
-        self.bot_hasfilter = True  # This flag is no longer used; NSFW filtering has been removed
-        self.bot_idletime = 120
-        self.bot_botloopcount = 0
-        self.bot_override_memory = ""
-        self.bot_override_backend = ""
+        self.chat_history = []  # List to store recent chat messages (for context)
+        self.bot_reply_timestamp = time.time() - 9999  # Timestamp for when the bot last replied (initialized to a past value)
+        self.bot_idletime = 120  # Idle timeout in seconds (after which the bot may stop replying)
+        self.bot_botloopcount = 0  # Counter for how many times the bot loop has executed (can be used for debugging)
+        self.bot_override_memory = ""  # Optional override for the bot's memory prompt (set via command)
+        self.bot_override_backend = ""  # Optional override for the bot's backend (set via command)
 
-bot_data = {}
+bot_data = {}  # Global dictionary to store BotChannelData for each channel (keyed by channel ID)
 
 def export_config():
+    """
+    Exports the current configuration for each channel to a JSON file.
+    This includes idle time and any override values for memory or backend.
+    """
     config = [
         {
             "key": key,
@@ -28,6 +31,10 @@ def export_config():
         json.dump(config, file, indent=2)
 
 def import_config():
+    """
+    Imports the configuration from a JSON file (if it exists) and updates bot_data accordingly.
+    This allows the bot to restore channel-specific settings on startup.
+    """
     try:
         if os.path.exists('botsettings.json'):
             with open('botsettings.json', 'r') as file:
@@ -43,6 +50,10 @@ def import_config():
         print("Failed to read settings:", e)
 
 def append_history(channelid, author, text):
+    """
+    Appends a message to the conversation history for the given channel.
+    Limits the stored message to 1000 characters and keeps the history to the latest 20 messages.
+    """
     if channelid in bot_data:
         currchannel = bot_data[channelid]
         msg = f"{author}: {text[:1000]}"

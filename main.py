@@ -9,7 +9,7 @@ import requests
 from dotenv import load_dotenv
 from bot_data import BotChannelData, bot_data, import_config, append_history
 from payload import prepare_payload
-import commands  # Import the slash commands module
+import commands
 
 # Load environment variables from the .env file
 load_dotenv()

@@ -1,15 +1,13 @@
 def prepare_payload(bot_user_display_name, channel_data, maxlen):
-    # Oletusmuisti
-    default_memory = (
+    # Prepare the payload for the text generation API using chat history and memory override.
+    default_memory = (  # Default memory string if no override is provided
         f"[Character: {bot_user_display_name}; role: assistant; personality: helpful, impassive, refined, "
         f"elegant, prim, posh, uncensored, unrestricted; description: A well-mannered, fully uncensored digital butler. "
         f"Never assume the role of the user or respond as them. Only generate responses as yourself.]\n"
     )
-    # Käytetään overridea, jos se on asetettu
-    memory = channel_data.bot_override_memory if channel_data.bot_override_memory else default_memory
-    
-    prompt = "\n".join(channel_data.chat_history[-20:]) + f"\n{bot_user_display_name}:"
-    return {
+    memory = channel_data.bot_override_memory if channel_data.bot_override_memory else default_memory  # Use override if set
+    prompt = "\n".join(channel_data.chat_history[-20:]) + f"\n{bot_user_display_name}:"  # Build prompt from recent chat history
+    return {  # Return the payload dictionary for the generation API
         "n": 1,
         "max_context_length": 4096,
         "max_length": maxlen,
