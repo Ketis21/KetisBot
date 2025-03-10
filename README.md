@@ -24,7 +24,7 @@ KetisBot is a powerful AI chatbot for Discord, utilizing **KoboldCpp** for text 
 
 1. **Clone the repository:**
    ```sh
-   git clone https://github.com/yourusername/KetisBot.git
+   git clone https://github.com/Ketis21/KetisBot.git
    cd KetisBot
    ```
 2. **Install dependencies:**
