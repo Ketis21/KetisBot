@@ -274,17 +274,17 @@ async def browse(interaction: discord.Interaction, query: str):
 # -----------------------------
 def setup(app: discord.Client):
     tree = app.tree  # Get the command tree from the client
-    tree.add_command(whitelist)   # Register whitelist command
-    tree.add_command(blacklist)   # Register blacklist command
-    tree.add_command(maxlen)      # Register maxlen command
-    tree.add_command(idletime)    # Register idletime command
-    tree.add_command(savesettings)# Register savesettings command
-    tree.add_command(memory)      # Register memory command
-    tree.add_command(backend)     # Register backend command
-    tree.add_command(sleep)       # Register sleep command
-    tree.add_command(status)      # Register status command
-    tree.add_command(reset)       # Register reset command
-    tree.add_command(describe)    # Register describe command
-    tree.add_command(draw)        # Register draw command
-    tree.add_command(continue_response)  # Register continue command
-    tree.add_command(browse)      # Register browse command
+    tree.add_command(whitelist)
+    tree.add_command(blacklist)
+    tree.add_command(maxlen)
+    tree.add_command(idletime)
+    tree.add_command(savesettings)
+    tree.add_command(memory)
+    tree.add_command(backend)
+    tree.add_command(sleep)
+    tree.add_command(status)
+    tree.add_command(reset)
+    tree.add_command(describe)
+    tree.add_command(draw)
+    tree.add_command(continue_response)
+    tree.add_command(browse)
