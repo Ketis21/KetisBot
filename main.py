@@ -30,7 +30,7 @@ submit_endpoint = f"{KAI_ENDPOINT}/api/v1/generate"
 imggen_endpoint = f"{KAI_ENDPOINT}/sdapi/v1/txt2img"
 
 # Global configuration dictionary (e.g. max response length)
-config = {"maxlen": 200}
+config = {"maxlen": 512}
 
 intents = discord.Intents.all()
 client = discord.Client(intents=intents)
@@ -77,14 +77,31 @@ async def on_message(message):
             try:
                 async with message.channel.typing():
                     currchannel.bot_reply_timestamp = time.time()
-                    payload = prepare_payload(client.user.display_name, currchannel, client.config["maxlen"])
+                    
+                    # Add user name to stop_sequence
+                    payload = prepare_payload(
+                        client.user.display_name, 
+                        currchannel, 
+                        client.config["maxlen"], 
+                        user_display_name=message.author.display_name
+                    )
+                    
                     response = requests.post(submit_endpoint, json=payload)
                     if response.status_code == 200:
                         result = response.json()["results"][0]["text"]
                         append_history(channelid, client.user.display_name, result)
-                        await message.channel.send(result)
+                        
+                        # Split the message to parts if it's over 2000 characters
+                        if len(result) > 2000:
+                            chunks = [result[i:i + 2000] for i in range(0, len(result), 2000)]
+                            for chunk in chunks:
+                                await message.channel.send(chunk)
+                        else:
+                            await message.channel.send(result)
             finally:
                 client.busy.release()
+
+
 
 try:
     client.run(BOT_TOKEN)
