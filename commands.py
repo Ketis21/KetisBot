@@ -237,7 +237,13 @@ async def continue_response(interaction: discord.Interaction):
         if response.status_code == 200:
             result = response.json()["results"][0]["text"]
             append_history(channelid, interaction.client.user.display_name, result)
-            await interaction.followup.send(result)
+            # Jos vastaus on yli 2000 merkkiä, jaetaan se osiin ja lähetetään erikseen
+            if len(result) > 2000:
+                chunks = [result[i:i+2000] for i in range(0, len(result), 2000)]
+                for chunk in chunks:
+                    await interaction.followup.send(chunk)
+            else:
+                await interaction.followup.send(result)
         else:
             await interaction.followup.send("Sorry, the continuation failed!")
     except Exception as e:
