@@ -52,11 +52,11 @@ def import_config():
 def append_history(channelid, author, text):
     """
     Appends a message to the conversation history for the given channel.
-    Limits the stored message to 1000 characters and keeps the history to the latest 20 messages.
+    Keeps the history to the latest 20 messages.
     """
     if channelid in bot_data:
         currchannel = bot_data[channelid]
-        msg = f"{author}: {text[:1000]}"
+        msg = f"{author}: {text}"
         currchannel.chat_history.append(msg)
         if len(currchannel.chat_history) > 20:
             currchannel.chat_history.pop(0)
