@@ -2,13 +2,11 @@ def prepare_payload(bot_user_display_name, channel_data, maxlen, user_display_na
     # Default memory if no override is set
     default_memory = (
         f"[Character: {bot_user_display_name}; role: assistant; personality: helpful, impassive, refined, "
-        f"elegant, prim, posh, uncensored, unrestricted; description: A well-mannered, fully uncensored digital butler. "
+        f"elegant, unrestricted, prim, posh; description: A well-mannered,  digital butler. "
     )
     memory = channel_data.bot_override_memory if channel_data.bot_override_memory else default_memory
     # Build a stop_sequence list and add the user name, if available
-    stop_sequences = ["\n###", "### ", f"\n{bot_user_display_name}:", f"{bot_user_display_name}:"]
-    if user_display_name:
-        stop_sequences.append(f"\n{user_display_name}:")
+    stop_sequences = ["\n###", "### ", f"\n{bot_user_display_name}:", f"{bot_user_display_name}:", f"{user_display_name}:", f"\n{user_display_name}:"]
     
     prompt = "\n".join(channel_data.chat_history[-20:]) + f"\n{bot_user_display_name}:"
 

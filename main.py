@@ -23,11 +23,12 @@ if missing:
 
 # Set up endpoints and configuration
 KAI_ENDPOINT = os.getenv("KAI_ENDPOINT")
+KAI_IMG_ENDPOINT = os.getenv("KAI_IMG_ENDPOINT")
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 ADMIN_NAME = os.getenv("ADMIN_NAME")
 
 submit_endpoint = f"{KAI_ENDPOINT}/api/v1/generate"
-imggen_endpoint = f"{KAI_ENDPOINT}/sdapi/v1/txt2img"
+imggen_endpoint = f"{KAI_IMG_ENDPOINT}/sdapi/v1/txt2img"
 
 # Global configuration dictionary (e.g. max response length)
 config = {"maxlen": 512}
