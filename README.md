@@ -35,6 +35,7 @@ KetisBot is a powerful AI chatbot for Discord, utilizing **KoboldCpp** for text 
    ```ini
    BOT_TOKEN=your_discord_bot_token
    KAI_ENDPOINT=your_koboldcpp_api_url
+   KAI_IMG_ENDPOINT=your_koboldcpp_img_url
    ADMIN_NAME=your_discord_username
    ```
 4. **Run the bot:**
