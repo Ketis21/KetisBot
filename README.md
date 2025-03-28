@@ -51,20 +51,13 @@ KetisBot is a powerful AI chatbot for Discord, utilizing **KoboldCpp** for text 
 - `/browse [query]` – Search the internet
 - `/draw [prompt]` – Generate an image
 - `/describe [image]` – Describe an uploaded image
-- `/continue` – Continue the last response
-- `/status` – Show bot status
 - `/reset` – Clear chat history
-- `/sleep` – Put the bot to sleep
 
 ### Admin Commands
 
-- `/whitelist` – Whitelist the current channel
-- `/blacklist` – Remove the current channel from the whitelist
-- `/maxlen [value]` – Set response length (max 200)
+- `/maxlen [value]` – Set response length (max 512)
 - `/idletime [value]` – Set bot idle timeout
 - `/memory [text]` – Override bot memory
-- `/backend [url]` – Set backend API
-- `/savesettings` – Save the bot configuration
 
 ## License
 
