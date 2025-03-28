@@ -45,7 +45,7 @@ KetisBot is a powerful AI chatbot for Discord, utilizing **KoboldCpp** for text 
 
 ## Commands
 
-**Note:** The bot must be **whitelisted** in a channel before use. Use `/whitelist` to enable commands in a channel. Additionally, interact with the bot by **mentioning** it (e.g., `@KetisBot your message`).
+Interact with the bot by **mentioning** it (e.g., `@KetisBot your message`).
 
 ### User Commands
 
