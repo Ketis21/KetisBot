@@ -4,7 +4,8 @@ import threading
 import time
 import base64
 import io
-import requests
+import asyncio
+import aiohttp
 
 from dotenv import load_dotenv
 from discord.ext.voice_recv import VoiceRecvClient  # <-- ADDED IMPORT
@@ -62,7 +63,7 @@ async def on_message(message):
         return
 
     channel_id = message.channel.id
-
+    # Use get_channel_data to auto-whitelist or retrieve channel data
     currchannel = get_channel_data(channel_id)
 
     # Track the user by display name
@@ -86,19 +87,24 @@ async def on_message(message):
                         client.config["maxlen"],
                         user_display_name=message.author.display_name
                     )
-                    response = requests.post(submit_endpoint, json=payload)
-                    if response.status_code == 200:
-                        result = response.json()["results"][0]["text"]
-                        append_history(channel_id, client.user.display_name, result)
-                        if len(result) > 2000:
-                            chunks = [result[i:i+2000] for i in range(0, len(result), 2000)]
-                            for chunk in chunks:
-                                await message.channel.send(chunk)
-                        else:
-                            await message.channel.send(result)
-                        export_config()
-                    else:
-                        await message.channel.send("Sorry, the generation failed.")
+                    # Use aiohttp for the HTTP POST request
+                    async with aiohttp.ClientSession() as session:
+                        async with session.post(submit_endpoint, json=payload) as resp:
+                            if resp.status == 200:
+                                data = await resp.json()
+                                result = data["results"][0]["text"]
+                                append_history(channel_id, client.user.display_name, result)
+                                if len(result) > 2000:
+                                    chunks = [result[i:i+2000] for i in range(0, len(result), 2000)]
+                                    for chunk in chunks:
+                                        await message.channel.send(chunk)
+                                else:
+                                    await message.channel.send(result)
+                                export_config()
+                            else:
+                                await message.channel.send("Sorry, the generation failed.")
+            except Exception as e:
+                await message.channel.send(f"An error occurred: {e}")
             finally:
                 client.busy.release()
 
