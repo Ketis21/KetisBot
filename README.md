@@ -5,7 +5,8 @@ KetisBot is a powerful AI chatbot for Discord, utilizing **KoboldCpp** for text 
 ## Features
 
 - 🤖 **AI-generated responses** using KoboldCpp
-- 🌐 **Web search** capability via `/browse`
+- 🎤 **Voice interaction** with speech recognition and TTS
+- 🌐 **Web search** capability
 - 🎨 **Image generation** via Stable Diffusion
 - ⚙️ **Customizable settings** for admins
 - 🛠 **Slash commands** for easy interaction
@@ -16,9 +17,8 @@ KetisBot is a powerful AI chatbot for Discord, utilizing **KoboldCpp** for text 
 
 - [KoboldCpp](https://github.com/LostRuins/koboldcpp)
 - Python 3.10+
-- `discord.py` library
-- `requests` library
-- `dotenv` for environment variables
+- ffmpeg installed and in system PATH (required for voice and TTS)
+- Discord bot token
 
 ### Setup Instructions
 
@@ -35,7 +35,6 @@ KetisBot is a powerful AI chatbot for Discord, utilizing **KoboldCpp** for text 
    ```ini
    BOT_TOKEN=your_discord_bot_token
    KAI_ENDPOINT=your_koboldcpp_api_url
-   KAI_IMG_ENDPOINT=your_koboldcpp_img_url
    ADMIN_NAME=your_discord_username
    ```
 4. **Run the bot:**
@@ -49,16 +48,19 @@ Interact with the bot by **mentioning** it (e.g., `@KetisBot your message`).
 
 ### User Commands
 
-- `/browse [query]` – Search the internet
-- `/draw [prompt]` – Generate an image
+- `/search [query]` – Search the internet
+- `/draw [orientation] [prompt]` – Generate an image
 - `/describe [image]` – Describe an uploaded image
 - `/reset` – Clear chat history
+- `/joinvoice` – Join your voice channel and listen
+- `/leavevoice` – Leave the current voice channel
 
 ### Admin Commands
 
 - `/maxlen [value]` – Set response length (max 512)
 - `/idletime [value]` – Set bot idle timeout
 - `/memory [text]` – Override bot memory
+- `/settts [voice]` – Change TTS voice
 
 ## License
 
