@@ -7,7 +7,8 @@ import io
 import requests
 
 from dotenv import load_dotenv
-from bot_data import BotChannelData, bot_data, import_config, export_config, append_history
+from discord.ext.voice_recv import VoiceRecvClient  # <-- ADDED IMPORT
+from bot_data import BotChannelData, get_channel_data, bot_data, import_config, export_config, append_history
 from payload import prepare_payload
 import commands
 
@@ -21,22 +22,25 @@ if missing:
 
 # Set up endpoints and configuration
 KAI_ENDPOINT = os.getenv("KAI_ENDPOINT")
-KAI_IMG_ENDPOINT = os.getenv("KAI_IMG_ENDPOINT")
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 ADMIN_NAME = os.getenv("ADMIN_NAME")
 
 submit_endpoint = f"{KAI_ENDPOINT}/api/v1/generate"
-imggen_endpoint = f"{KAI_IMG_ENDPOINT}/sdapi/v1/txt2img"
 config = {"maxlen": 512}
 
 intents = discord.Intents.all()
-client = discord.Client(intents=intents)
+client = discord.Client(
+    intents=intents,
+    voice_client_class=VoiceRecvClient  # <-- KEY CHANGE: Enable voice reception
+)
 
 # Attach CommandTree and global variables to the client
 client.tree = discord.app_commands.CommandTree(client)
 client.submit_endpoint = submit_endpoint
-client.imggen_endpoint = imggen_endpoint
+client.imggen_endpoint = f"{KAI_ENDPOINT}/sdapi/v1/txt2img"
 client.websearch_endpoint = f"{KAI_ENDPOINT}/api/extra/websearch"
+client.transcribe_endpoint = f"{KAI_ENDPOINT}/api/extra/transcribe"
+client.tts_endpoint = f"{KAI_ENDPOINT}/api/extra/tts"
 client.busy = threading.Lock()
 client.config = config
 client.admin_name = ADMIN_NAME
@@ -58,10 +62,8 @@ async def on_message(message):
         return
 
     channel_id = message.channel.id
-    # Auto-whitelist: create channel data if missing.
-    if channel_id not in bot_data:
-        bot_data[channel_id] = BotChannelData()
-    currchannel = bot_data[channel_id]
+
+    currchannel = get_channel_data(channel_id)
 
     # Track the user by display name
     if message.author.display_name not in currchannel.users:

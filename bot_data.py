@@ -9,9 +9,18 @@ class BotChannelData:
         self.bot_override_memory = ""
         self.bot_idletime = 120
         self.users = []
+        self.tts_provider = "koboldcpp"
+        self.tts_voice = "kobo"
 
 # Global dictionary for channel data
 bot_data = {}
+
+# Global dictionary for auto-whitelisting and voice sinks
+def get_channel_data(channel_id):
+    """Return BotChannelData for a given channel_id. Auto-whitelist if missing."""
+    if channel_id not in bot_data:
+        bot_data[channel_id] = BotChannelData()
+    return bot_data[channel_id]
 
 def export_config():
     config = []
@@ -46,5 +55,4 @@ def append_history(channel_id, speaker, text):
         message = f"{speaker}: {text}"
         bot_data[channel_id].chat_history.append(message)
         if len(bot_data[channel_id].chat_history) > 20:
-            bot_data[channel_id].chat_history = bot_data[channel_id].chat_history[-50:]
-
+            bot_data[channel_id].chat_history = bot_data[channel_id].chat_history[-20:]

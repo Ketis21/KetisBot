@@ -6,7 +6,6 @@ def prepare_payload(bot_name, channel_data, max_length, user_display_name=None):
       bot_name (str): The display name of the bot.
       channel_data (BotChannelData): Contains chat history, memory override, and a list of users.
       max_length (int): Maximum response length.
-      user_display_name (str, optional): Display name of the user (unused in this function, but kept for compatibility).
     
     Returns:
       dict: Payload for the text generation API.
