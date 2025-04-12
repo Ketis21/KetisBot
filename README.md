@@ -1,6 +1,6 @@
 # KetisBot
 
-KetisBot is a powerful AI chatbot for Discord, utilizing **KoboldCpp** for text generation, **web browsing**, and **image creation**. It supports **slash commands** for easy interaction and allows customization via admin commands.
+KetisBot is a powerful, voice-enabled AI chatbot for Discord. It leverages KoboldCpp for language generation, supports Stable Diffusion for image creation, performs web searches, and now offers voice interaction and text-to-speech playback in real-time.
 
 ## Features
 
