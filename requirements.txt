@@ -1,3 +1,5 @@
 discord.py
 python-dotenv
-requests
+aiohttp
+pydub
+discord-ext-voice-recv
