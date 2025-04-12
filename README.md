@@ -44,7 +44,7 @@ KetisBot is a powerful, voice-enabled AI chatbot for Discord. It leverages Kobol
 
 ## Commands
 
-Interact with the bot by **mentioning** it (e.g., `@KetisBot your message`).
+Interact with the bot by **mentioning** it (e.g., `@KetisBot your message`) or in the voice channel by saying **Hey bot** (e.g., `Hey bot your message`).
 
 ### User Commands
 
