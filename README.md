@@ -62,6 +62,6 @@ Interact with the bot by **mentioning** it (e.g., `@KetisBot your message`).
 
 ## License
 
-This project is licensed under the MIT License.
+This project is licensed under the AGPL-3.0 license.
 
 ---
